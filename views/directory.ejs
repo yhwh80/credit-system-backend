@@ -1,0 +1,93 @@
+<!-- views/directory.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Find Trusted Local Professionals</title>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-white text-black dark:bg-gray-900 dark:text-white p-6">
+
+  <!-- ✅ Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">Find Trusted Local Professionals</h1>
+    <p class="text-gray-600 dark:text-gray-300">Browse vetted tradespeople, carers, tutors and more near you</p>
+  </div>
+
+  <!-- ✅ Filter Row -->
+  <form method="GET" action="/directory" class="mb-6 flex flex-wrap gap-4 items-center">
+    <input type="text" name="q" placeholder="Search by name, location or skill"
+      value="<%= typeof query !== 'undefined' ? query : '' %>"
+      class="px-3 py-2 rounded border w-full md:w-1/3 bg-white text-black" />
+
+    <select name="category" class="px-3 py-2 rounded border bg-white text-black">
+      <option value="">All Professions</option>
+      <optgroup label="🏠 Trades">
+        <option value="Plumber" <%= selectedCategory === 'Plumber' ? 'selected' : '' %>>Plumber</option>
+        <option value="Electrician" <%= selectedCategory === 'Electrician' ? 'selected' : '' %>>Electrician</option>
+        <option value="Cleaner" <%= selectedCategory === 'Cleaner' ? 'selected' : '' %>>Cleaner</option>
+        <option value="Painter & Decorator" <%= selectedCategory === 'Painter & Decorator' ? 'selected' : '' %>>Painter & Decorator</option>
+        <option value="Landscaper" <%= selectedCategory === 'Landscaper' ? 'selected' : '' %>>Landscaper</option>
+      </optgroup>
+      <optgroup label="💆 Health & Care">
+        <option value="Nurse" <%= selectedCategory === 'Nurse' ? 'selected' : '' %>>Nurse</option>
+        <option value="Carer" <%= selectedCategory === 'Carer' ? 'selected' : '' %>>Carer</option>
+        <option value="Massage" <%= selectedCategory === 'Massage' ? 'selected' : '' %>>Massage</option>
+      </optgroup>
+      <optgroup label="📚 Education">
+        <option value="Tutor" <%= selectedCategory === 'Tutor' ? 'selected' : '' %>>Tutor</option>
+        <option value="Driving Instructor" <%= selectedCategory === 'Driving Instructor' ? 'selected' : '' %>>Driving Instructor</option>
+      </optgroup>
+    </select>
+
+    <select name="sortBy" class="px-3 py-2 rounded border bg-white text-black">
+      <option value="rating">Sort by Rating</option>
+      <option value="featured">Sort by Featured</option>
+      <option value="recommended">Sort by Recommended</option>
+    </select>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+      Apply Filters
+    </button>
+  </form>
+
+  <!-- ✅ Card Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (professionals && professionals.length > 0) { %>
+      <% professionals.forEach(function(pro) { %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 flex flex-col justify-between">
+          <div class="mb-4">
+            <div class="flex items-center gap-3 mb-2">
+              <div class="w-12 h-12 bg-gray-300 rounded-full"></div>
+              <div>
+                <h2 class="text-lg font-semibold"><%= pro.name %></h2>
+                <% if (pro.category) { %>
+                  <p class="text-sm text-gray-500 dark:text-gray-400"><%= pro.category %></p>
+                <% } %>
+              </div>
+            </div>
+            <% if (pro.location) { %>
+              <p class="text-sm text-gray-500 dark:text-gray-400">📍 <%= pro.location %></p>
+            <% } %>
+            <p class="text-sm mt-2">⭐ <%= pro.rating || 'Unrated' %></p>
+            <div class="mt-2 flex gap-2">
+              <% if (pro.isRecommended) { %>
+                <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Recommended</span>
+              <% } %>
+              <% if (pro.isFeatured) { %>
+                <span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">Featured</span>
+              <% } %>
+            </div>
+          </div>
+          <a href="/directory/<%= pro._id %>" class="block text-center bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+            View Profile
+          </a>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p class="text-gray-400 text-sm col-span-3">No professionals found.</p>
+    <% } %>
+  </div>
+
+</body>
+</html>

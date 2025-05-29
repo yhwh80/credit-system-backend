@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job - Recommend Us UK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/dashboard" class="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Recommend Us UK
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/dashboard" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
+                    </a>
+                    <div class="text-sm text-gray-500">
+                        Welcome, <%= user.name %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-briefcase text-blue-600 mr-3"></i>Post a New Job
+                </h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Connect with qualified professionals in the UK. Your job will receive up to <span class="font-semibold text-blue-600">3 competitive bids</span> 
+                    to ensure quality while keeping options manageable.
+                </p>
+            </div>
+        </div>
+
+        <!-- Job Posting Form -->
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <form id="jobForm" action="/jobs/create" method="POST" class="space-y-8">
+                
+                <!-- Job Title -->
+                <div>
+                    <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-heading text-blue-600 mr-2"></i>Job Title *
+                    </label>
+                    <input type="text" 
+                           id="title" 
+                           name="title" 
+                           required 
+                           maxlength="100"
+                           placeholder="e.g., Kitchen Renovation, Website Design, Garden Landscaping"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-lg">
+                    <p class="text-sm text-gray-500 mt-1">Be specific and clear about what you need done</p>
+                </div>
+
+                <!-- Job Category -->
+                <div>
+                    <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-tags text-blue-600 mr-2"></i>Job Category *
+                    </label>
+                    <select id="category" 
+                            name="category" 
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-lg">
+                        <option value="">Select a category...</option>
+                        
+                        <optgroup label="🏠 Home Services">
+                            <option value="Plumbing">Plumbing</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Carpentry">Carpentry</option>
+                            <option value="Painting & Decorating">Painting & Decorating</option>
+                            <option value="Roofing">Roofing</option>
+                            <option value="Gardening & Landscaping">Gardening & Landscaping</option>
+                            <option value="Cleaning Services">Cleaning Services</option>
+                            <option value="Home Renovation">Home Renovation</option>
+                        </optgroup>
+                        
+                        <optgroup label="💻 Tech & Digital">
+                            <option value="Web Development">Web Development</option>
+                            <option value="Mobile App Development">Mobile App Development</option>
+                            <option value="Graphic Design">Graphic Design</option>
+                            <option value="Digital Marketing">Digital Marketing</option>
+                            <option value="IT Support">IT Support</option>
+                            <option value="Photography">Photography</option>
+                            <option value="Video Production">Video Production</option>
+                        </optgroup>
+                        
+                        <optgroup label="👤 Personal Services">
+                            <option value="Personal Training">Personal Training</option>
+                            <option value="Tutoring">Tutoring</option>
+                            <option value="Music Lessons">Music Lessons</option>
+                            <option value="Life Coaching">Life Coaching</option>
+                            <option value="Event Planning">Event Planning</option>
+                            <option value="Pet Services">Pet Services</option>
+                        </optgroup>
+                        
+                        <optgroup label="📋 Business Services">
+                            <option value="Accounting">Accounting</option>
+                            <option value="Legal Services">Legal Services</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Writing & Translation">Writing & Translation</option>
+                        </optgroup>
+                        
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Other Category Field (hidden by default) -->
+                <div id="otherCategoryDiv" class="hidden">
+                    <label for="otherCategory" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-edit text-blue-600 mr-2"></i>Please specify category
+                    </label>
+                    <input type="text" 
+                           id="otherCategory" 
+                           name="otherCategory" 
+                           maxlength="50"
+                           placeholder="Enter your specific category"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200">
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label for="location" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Location *
+                    </label>
+                    <input type="text" 
+                           id="location" 
+                           name="location" 
+                           required 
+                           maxlength="100"
+                           placeholder="e.g., London, Manchester, Birmingham"
+                           list="ukCities"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-lg">
+                    
+                    <!-- UK Cities Datalist -->
+                    <datalist id="ukCities">
+                        <option value="London">
+                        <option value="Manchester">
+                        <option value="Birmingham">
+                        <option value="Liverpool">
+                        <option value="Leeds">
+                        <option value="Sheffield">
+                        <option value="Edinburgh">
+                        <option value="Bristol">
+                        <option value="Glasgow">
+                        <option value="Leicester">
+                        <option value="Coventry">
+                        <option value="Bradford">
+                        <option value="Cardiff">
+                        <option value="Belfast">
+                        <option value="Nottingham">
+                        <option value="Hull">
+                        <option value="Newcastle">
+                        <option value="Stoke-on-Trent">
+                        <option value="Southampton">
+                        <option value="Derby">
+                        <option value="Portsmouth">
+                        <option value="Brighton">
+                        <option value="Plymouth">
+                        <option value="Northampton">
+                        <option value="Reading">
+                        <option value="Luton">
+                        <option value="Wolverhampton">
+                        <option value="Bolton">
+                        <option value="Bournemouth">
+                        <option value="Norwich">
+                        <option value="Swindon">
+                        <option value="Swansea">
+                        <option value="Southend-on-Sea">
+                        <option value="Middlesbrough">
+                        <option value="Milton Keynes">
+                        <option value="Aberdeen">
+                        <option value="Dundee">
+                        <option value="York">
+                        <option value="Oxford">
+                        <option value="Cambridge">
+                        <option value="Exeter">
+                        <option value="Gloucester">
+                        <option value="Chester">
+                        <option value="Bath">
+                        <option value="Canterbury">
+                        <option value="Salisbury">
+                        <option value="Inverness">
+                        <option value="Stirling">
+                        <option value="Bangor">
+                        <option value="St Albans">
+                        <option value="Chelmsford">
+                        <option value="Winchester">
+                        <option value="Chichester">
+                        <option value="Truro">
+                        <option value="Armagh">
+                        <option value="Newry">
+                        <option value="Lisburn">
+                    </datalist>
+                    <p class="text-sm text-gray-500 mt-1">Enter the city or area where the work needs to be done</p>
+                </div>
+
+                <!-- Job Description -->
+                <div>
+                    <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-align-left text-blue-600 mr-2"></i>Job Description *
+                    </label>
+                    <textarea id="description" 
+                              name="description" 
+                              required 
+                              rows="6" 
+                              maxlength="2000"
+                              placeholder="Describe your project in detail:
+• What needs to be done?
+• Any specific requirements or preferences?
+• Timeline expectations?
+• Budget range (optional)?
+• Any materials or tools you'll provide?"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-lg resize-vertical min-h-[150px]"></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-sm text-gray-500">The more details you provide, the better quality bids you'll receive</p>
+                        <span id="charCount" class="text-sm text-gray-400">0/2000</span>
+                    </div>
+                </div>
+
+                <!-- Job Features Info -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-3">
+                        <i class="fas fa-star text-yellow-500 mr-2"></i>How it works
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">1</div>
+                            <div>
+                                <h4 class="font-semibold text-blue-800">Post Your Job</h4>
+                                <p class="text-sm text-blue-600">Free to post, detailed descriptions get better results</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">2</div>
+                            <div>
+                                <h4 class="font-semibold text-blue-800">Receive Up to 3 Bids</h4>
+                                <p class="text-sm text-blue-600">Quality professionals compete for your project</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">3</div>
+                            <div>
+                                <h4 class="font-semibold text-blue-800">Choose & Hire</h4>
+                                <p class="text-sm text-blue-600">Review bids and select the best professional</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center pt-6">
+                    <button type="submit" 
+                            class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg text-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>Post Job & Get Quotes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Character counter for description
+        const descriptionTextarea = document.getElementById('description');
+        const charCount = document.getElementById('charCount');
+        
+        descriptionTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCount.textContent = `${currentLength}/2000`;
+            
+            if (currentLength > 1800) {
+                charCount.className = 'text-sm text-red-500 font-semibold';
+            } else if (currentLength > 1500) {
+                charCount.className = 'text-sm text-yellow-600';
+            } else {
+                charCount.className = 'text-sm text-gray-400';
+            }
+        });
+
+        // Show/hide other category field
+        const categorySelect = document.getElementById('category');
+        const otherCategoryDiv = document.getElementById('otherCategoryDiv');
+        const otherCategoryInput = document.getElementById('otherCategory');
+        
+        categorySelect.addEventListener('change', function() {
+            if (this.value === 'Other') {
+                otherCategoryDiv.classList.remove('hidden');
+                otherCategoryInput.required = true;
+            } else {
+                otherCategoryDiv.classList.add('hidden');
+                otherCategoryInput.required = false;
+                otherCategoryInput.value = '';
+            }
+        });
+
+        // Form validation and enhancement
+        document.getElementById('jobForm').addEventListener('submit', function(e) {
+            const title = document.getElementById('title').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const category = document.getElementById('category').value;
+            
+            if (!title || !description || !location || !category) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            if (title.length < 10) {
+                e.preventDefault();
+                alert('Job title must be at least 10 characters long.');
+                return;
+            }
+            
+            if (description.length < 50) {
+                e.preventDefault();
+                alert('Job description must be at least 50 characters long for better results.');
+                return;
+            }
+            
+            if (category === 'Other' && !document.getElementById('otherCategory').value.trim()) {
+                e.preventDefault();
+                alert('Please specify the category when selecting "Other".');
+                return;
+            }
+        });
+
+        // Auto-resize textarea
+        descriptionTextarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>

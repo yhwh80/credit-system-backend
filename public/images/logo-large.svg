@@ -1,0 +1,40 @@
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradientLarge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EC4899;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradientLarge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#60A5FA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A78BFA;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <fegaussianblur stdDeviation="3" result="coloredBlur"/>
+      <femerge> 
+        <femergenode in="coloredBlur"/>
+        <femergenode in="SourceGraphic"/> 
+      </femerge>
+    </filter>
+  </defs>
+  
+  <!-- Logo Icon with glow -->
+  <rect x="5" y="15" width="30" height="30" rx="8" fill="url(#logoGradientLarge)" filter="url(#glow)"/>
+  
+  <!-- Star Icon -->
+  <path d="M20 22l3.5 2.1-1.4-3.9 3.2-2.4h-3.9L20 14l-1.4 3.8h-3.9l3.2 2.4-1.4 3.9L20 22z" fill="white"/>
+  
+  <!-- Company Name -->
+  <text x="45" y="27" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="url(#textGradientLarge)">Recommend Us UK</text>
+  <text x="45" y="42" font-family="Arial, sans-serif" font-size="8" fill="#9CA3AF">Trusted Professional Services</text>
+  
+  <!-- Decorative UK elements -->
+  <circle cx="170" cy="20" r="2" fill="#60A5FA" opacity="0.6"/>
+  <circle cx="180" cy="30" r="1.5" fill="#A78BFA" opacity="0.8"/>
+  <circle cx="185" cy="40" r="2" fill="#EC4899" opacity="0.5"/>
+  
+  <!-- Subtle UK flag colors -->
+  <rect x="190" y="15" width="2" height="8" fill="#DC2626" opacity="0.6"/>
+  <rect x="190" y="25" width="2" height="8" fill="#2563EB" opacity="0.6"/>
+  <rect x="190" y="35" width="2" height="8" fill="#DC2626" opacity="0.6"/>
+</svg>

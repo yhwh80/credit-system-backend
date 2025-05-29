@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bids & Projects - Recommend Us UK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen">
+    <!-- Header -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/dashboard" class="text-2xl font-bold text-green-600 hover:text-green-700 transition-colors">
+                        <i class="fas fa-home mr-2"></i>Recommend Us UK
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                        <i class="fas fa-coins mr-1"></i><%= user.credits %> Credits
+                    </div>
+                    <a href="/jobs/browse" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                        <i class="fas fa-search mr-1"></i>Browse Jobs
+                    </a>
+                    <a href="/dashboard" class="text-gray-600 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
+                    </a>
+                    <div class="text-sm text-gray-500">
+                        Welcome, <%= user.name %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <div class="text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                    <i class="fas fa-hand-paper text-green-600 mr-3"></i>My Bids & Projects
+                </h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Track your bids, monitor project status, and manage your professional activities.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bid Stats -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="bg-blue-100 text-blue-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-list text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900"><%= myBids.length %></div>
+                <div class="text-sm text-gray-600">Total Bids</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="bg-yellow-100 text-yellow-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-clock text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">
+                    <%= myBids.filter(bid => bid.job.status === 'open' && !bid.bid.accepted).length %>
+                </div>
+                <div class="text-sm text-gray-600">Pending</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="bg-green-100 text-green-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-handshake text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">
+                    <%= myBids.filter(bid => bid.bid.accepted).length %>
+                </div>
+                <div class="text-sm text-gray-600">Accepted</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                <div class="bg-purple-100 text-purple-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-check-circle text-xl"></i>
+                </div>
+                <div class="text-2xl font-bold text-gray-900">
+                    <%= myBids.filter(bid => bid.job.status === 'completed').length %>
+                </div>
+                <div class="text-sm text-gray-600">Completed</div>
+            </div>
+        </div>
+
+        <!-- Bids List -->
+        <div class="space-y-6">
+            <% if (myBids.length === 0) { %>
+                <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+                    <i class="fas fa-hand-paper text-gray-400 text-6xl mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-600 mb-4">No bids placed yet</h3>
+                    <p class="text-gray-500 mb-6">Start bidding on jobs that match your skills to grow your business.</p>
+                    <a href="/jobs/browse" class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-search mr-2"></i>Browse Available Jobs
+                    </a>
+                </div>
+            <% } else { %>
+                <% myBids.forEach(bidInfo => { 
+                    const { job, bid, totalBids, maxBids } = bidInfo;
+                    let statusColor = 'gray';
+                    let statusIcon = 'info-circle';
+                    let statusText = job.status;
+                    
+                    if (bid.accepted) {
+                        statusColor = 'green';
+                        statusIcon = 'handshake';
+                        statusText = 'Bid Accepted';
+                    } else if (job.status === 'open') {
+                        statusColor = 'yellow';
+                        statusIcon = 'clock';
+                        statusText = 'Pending Review';
+                    } else if (job.status === 'completed') {
+                        statusColor = 'purple';
+                        statusIcon = 'check-circle';
+                        statusText = 'Project Completed';
+                    } else if (job.status === 'in progress') {
+                        statusColor = bid.accepted ? 'blue' : 'gray';
+                        statusIcon = bid.accepted ? 'hourglass-half' : 'times-circle';
+                        statusText = bid.accepted ? 'In Progress' : 'Not Selected';
+                    }
+                %>
+                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 p-6 border-l-4 border-<%= statusColor %>-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-gray-900 mb-2"><%= job.title %></h3>
+                                <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-3">
+                                    <span class="bg-<%= statusColor %>-100 text-<%= statusColor %>-800 px-3 py-1 rounded-full font-semibold">
+                                        <i class="fas fa-<%= statusIcon %> mr-1"></i><%= statusText %>
+                                    </span>
+                                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-semibold">
+                                        <i class="fas fa-tag mr-1"></i><%= job.category %>
+                                    </span>
+                                    <span><i class="fas fa-map-marker-alt mr-1"></i><%= job.location %></span>
+                                    <span><i class="fas fa-user mr-1"></i><%= job.createdBy.name %></span>
+                                    <span><i class="fas fa-calendar mr-1"></i><%= new Date(job.createdAt).toLocaleDateString() %></span>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                                    <h4 class="font-semibold text-gray-700 mb-2">My Bid:</h4>
+                                    <p class="text-gray-600"><%= bid.message %></p>
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        <i class="fas fa-clock mr-1"></i>Placed on <%= new Date(bid.createdAt || job.createdAt).toLocaleDateString() %>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-right ml-6">
+                                <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-2">
+                                    <i class="fas fa-users mr-1"></i><%= totalBids %>/<%= maxBids %> bids
+                                </div>
+                                <% if (bid.accepted) { %>
+                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-star mr-1"></i>Selected
+                                    </div>
+                                <% } else if (job.status === 'open') { %>
+                                    <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-hourglass-half mr-1"></i>Under Review
+                                    </div>
+                                <% } else if (job.status === 'in progress' && !bid.accepted) { %>
+                                    <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                        <i class="fas fa-times mr-1"></i>Not Selected
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-4 border-t border-gray-200">
+                            <div class="text-sm text-gray-500">
+                                <% if (bid.accepted && job.status === 'in progress') { %>
+                                    <span class="text-blue-600 font-semibold">
+                                        <i class="fas fa-tools mr-1"></i>Active project - keep in touch with the client
+                                    </span>
+                                <% } else if (bid.accepted && job.status === 'completed') { %>
+                                    <span class="text-purple-600 font-semibold">
+                                        <i class="fas fa-trophy mr-1"></i>Project completed successfully
+                                    </span>
+                                <% } else if (job.status === 'open') { %>
+                                    <span class="text-yellow-600">
+                                        <i class="fas fa-clock mr-1"></i>Waiting for client decision
+                                    </span>
+                                <% } else { %>
+                                    <span class="text-gray-500">
+                                        <i class="fas fa-info-circle mr-1"></i>Project status: <%= job.status %>
+                                    </span>
+                                <% } %>
+                            </div>
+                            <div class="space-x-3">
+                                <button onclick="viewJobDetails('<%= job._id %>')" 
+                                        class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                                    <i class="fas fa-eye mr-2"></i>View Job Details
+                                </button>
+                                <% if (bid.accepted && job.status === 'in progress') { %>
+                                    <button onclick="contactClient('<%= job.createdBy.name %>', '<%= job.createdBy.email %>')" 
+                                            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                                        <i class="fas fa-envelope mr-2"></i>Contact Client
+                                    </button>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-12 bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+                <i class="fas fa-rocket text-green-600 mr-3"></i>Grow Your Business
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <a href="/jobs/browse" class="group text-center p-6 border border-gray-200 rounded-lg hover:border-green-500 hover:shadow-lg transition-all">
+                    <div class="bg-green-100 text-green-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-search text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Find More Jobs</h3>
+                    <p class="text-gray-600">Browse available projects and place strategic bids</p>
+                </a>
+                <a href="/directory/profile/edit" class="group text-center p-6 border border-gray-200 rounded-lg hover:border-blue-500 hover:shadow-lg transition-all">
+                    <div class="bg-blue-100 text-blue-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-user-edit text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Update Profile</h3>
+                    <p class="text-gray-600">Keep your professional profile current and attractive</p>
+                </a>
+                <a href="/credits" class="group text-center p-6 border border-gray-200 rounded-lg hover:border-yellow-500 hover:shadow-lg transition-all">
+                    <div class="bg-yellow-100 text-yellow-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:bg-yellow-600 group-hover:text-white transition-colors">
+                        <i class="fas fa-coins text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Buy Credits</h3>
+                    <p class="text-gray-600">Get more credits to bid on premium projects</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Details Modal -->
+    <div id="detailsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Job Details</h3>
+                <button onclick="closeDetailsModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <div id="jobDetailsContent">
+                <!-- Job details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function viewJobDetails(jobId) {
+            fetch(`/jobs/${jobId}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(job => {
+                const content = `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="text-2xl font-bold text-gray-900 mb-2">${job.title}</h4>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-tag mr-1"></i>${job.category}
+                                </span>
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>${job.location}
+                                </span>
+                                <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-semibold capitalize">
+                                    <i class="fas fa-info-circle mr-1"></i>${job.status}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-semibold text-gray-700 mb-2">Full Description</h5>
+                            <p class="text-gray-600 leading-relaxed whitespace-pre-wrap">${job.description}</p>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-semibold text-gray-700 mb-2">Posted By</h5>
+                            <p class="text-gray-600">${job.createdBy.name} (${job.createdBy.email})</p>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-semibold text-gray-700 mb-2">Competition</h5>
+                            <p class="text-gray-600">${job.bids.length} of ${job.maxBids} bids received</p>
+                        </div>
+                        
+                        <div>
+                            <h5 class="font-semibold text-gray-700 mb-2">Posted Date</h5>
+                            <p class="text-gray-600">${new Date(job.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('jobDetailsContent').innerHTML = content;
+                document.getElementById('detailsModal').classList.remove('hidden');
+            })
+            .catch(err => {
+                alert('Error loading job details');
+                console.error(err);
+            });
+        }
+
+        function contactClient(clientName, clientEmail) {
+            const subject = encodeURIComponent(`Regarding your project on Recommend Us UK`);
+            const body = encodeURIComponent(`Hi ${clientName},\n\nI'm writing regarding the project you posted on Recommend Us UK. I'm excited to work with you and would like to discuss the next steps.\n\nBest regards,\n<%= user.name %>`);
+            
+            window.open(`mailto:${clientEmail}?subject=${subject}&body=${body}`, '_blank');
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.add('hidden');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('detailsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDetailsModal();
+            }
+        });
+    </script>
+</body>
+</html>

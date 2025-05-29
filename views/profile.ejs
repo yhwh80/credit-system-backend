@@ -1,0 +1,72 @@
+<!-- views/profile.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= pro.name %> - Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-white text-black dark:bg-gray-900 dark:text-white p-6">
+
+  <div class="max-w-3xl mx-auto">
+    <a href="/directory" class="text-blue-600 hover:underline">← Back to directory</a>
+
+    <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow p-6">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 bg-gray-300 rounded-full"></div>
+        <div>
+          <h1 class="text-2xl font-bold"><%= pro.name %></h1>
+          <% if (pro.category) { %>
+            <p class="text-sm text-gray-500 dark:text-gray-400"><%= pro.category %></p>
+          <% } %>
+          <% if (pro.location) { %>
+            <p class="text-sm text-gray-500 dark:text-gray-400">📍 <%= pro.location %></p>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <p class="text-sm">⭐ Rating: <%= pro.rating || 'Unrated' %></p>
+        <p class="text-sm">👍 Recommendations: <%= pro.recommendationsCount || 0 %></p>
+        <div class="mt-2 flex gap-2">
+          <% if (pro.isRecommended) { %>
+            <span class="text-xs bg-green-500 text-white px-2 py-1 rounded-full">✅ Recommended</span>
+          <% } %>
+          <% if (pro.isFeatured) { %>
+            <span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">🌟 Featured</span>
+          <% } %>
+        </div>
+      </div>
+
+      <% if (pro.bio) { %>
+        <div class="mt-4">
+          <h2 class="text-lg font-semibold mb-2">About</h2>
+          <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300"><%= pro.bio %></p>
+        </div>
+      <% } %>
+
+      <% if (pro.reviews && pro.reviews.length > 0) { %>
+        <div class="mt-6">
+          <h2 class="text-lg font-semibold mb-2">Reviews</h2>
+          <ul class="space-y-4">
+            <% pro.reviews.forEach(review => { %>
+              <li class="bg-gray-100 dark:bg-gray-700 p-3 rounded">
+                <p class="text-sm italic">"<%= review.comment %>"</p>
+                <p class="text-xs text-gray-500 mt-1">⭐ <%= review.rating %></p>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+      <% } %>
+
+      <!-- ✅ Show edit button only to current logged-in professional -->
+      <% if (currentUser && currentUser._id.toString() === pro._id.toString()) { %>
+        <a href="/directory/profile/edit" class="inline-block mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          ✏️ Edit My Profile
+        </a>
+      <% } %>
+    </div>
+  </div>
+
+</body>
+</html>
