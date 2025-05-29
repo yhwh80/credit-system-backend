@@ -13,10 +13,18 @@ dotenv.config(); // Load .env config
 const app = express();
 app.set('view engine', 'ejs');
 
-// 🔐 Security Headers (disabled CSP for local development)
+// 🔐 Security Headers (production-ready)
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable CSP entirely for local development
-  hsts: false, // Disable HTTPS enforcement for local development
+  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdnjs.cloudflare.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"],
+      fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  } : false, // Disable CSP in development
+  hsts: process.env.NODE_ENV === 'production', // Enable HTTPS enforcement in production
 }));
 
 // 🔐 Rate Limiting
