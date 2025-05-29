@@ -1,0 +1,25 @@
+name: credit-system-backend
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: YOUR_GITHUB_USERNAME/credit-system-backend
+    branch: main
+  run_command: npm start
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  env:
+  - key: NODE_ENV
+    value: production
+  - key: MONGO_URI
+    value: ${MONGO_URI}
+  - key: SESSION_SECRET
+    value: ${SESSION_SECRET}
+  - key: JWT_SECRET
+    value: ${JWT_SECRET}
+
+databases:
+- name: credit-system-db
+  engine: MONGODB
+  version: "6"
