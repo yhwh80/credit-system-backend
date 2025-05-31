@@ -2,13 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Recommend Us UK</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: {
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
 
-  <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <i class="fas fa-star text-white text-sm"></i>
+          </div>
+          <span class="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Recommend Us UK
+          </span>
+        </div>
+
+        <!-- Navigation Links (Desktop) -->
+        <div class="hidden md:flex items-center space-x-6">
+          <a href="/dashboard" class="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+            <i class="fas fa-home mr-1"></i>Dashboard
+          </a>
+          <% if (user.role === 'client') { %>
+            <a href="/jobs/post" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <i class="fas fa-plus mr-1"></i>Post Job
+            </a>
+            <a href="/dashboard/client" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <i class="fas fa-list mr-1"></i>My Jobs
+            </a>
+          <% } else if (user.role === 'professional') { %>
+            <a href="/jobs/browse" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <i class="fas fa-search mr-1"></i>Browse Jobs
+            </a>
+            <a href="/dashboard/professional" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <i class="fas fa-briefcase mr-1"></i>My Bids
+            </a>
+            <a href="/credits" class="text-gray-700 hover:text-blue-600 transition-colors">
+              <i class="fas fa-coins mr-1"></i>Credits
+            </a>
+          <% } %>
+          <a href="/directory" class="text-gray-700 hover:text-blue-600 transition-colors">
+            <i class="fas fa-users mr-1"></i>Directory
+          </a>
+          <a href="/auth/logout" class="text-red-600 hover:text-red-700 transition-colors">
+            <i class="fas fa-sign-out-alt mr-1"></i>Logout
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 transition-colors">
+            <i class="fas fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Mobile Navigation Menu -->
+      <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+        <div class="px-4 py-4 space-y-3">
+          <a href="/dashboard" class="block text-gray-700 hover:text-blue-600 transition-colors py-2 font-medium">
+            <i class="fas fa-home mr-2"></i>Dashboard
+          </a>
+          <% if (user.role === 'client') { %>
+            <a href="/jobs/post" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+              <i class="fas fa-plus mr-2"></i>Post Job
+            </a>
+            <a href="/dashboard/client" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+              <i class="fas fa-list mr-2"></i>My Jobs
+            </a>
+          <% } else if (user.role === 'professional') { %>
+            <a href="/jobs/browse" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+              <i class="fas fa-search mr-2"></i>Browse Jobs
+            </a>
+            <a href="/dashboard/professional" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+              <i class="fas fa-briefcase mr-2"></i>My Bids
+            </a>
+            <a href="/credits" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+              <i class="fas fa-coins mr-2"></i>Credits
+            </a>
+          <% } %>
+          <a href="/directory" class="block text-gray-700 hover:text-blue-600 transition-colors py-2">
+            <i class="fas fa-users mr-2"></i>Directory
+          </a>
+          <div class="border-t border-gray-200 pt-3 mt-3">
+            <a href="/auth/logout" class="block text-red-600 hover:text-red-700 transition-colors py-2">
+              <i class="fas fa-sign-out-alt mr-2"></i>Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8 pt-24">
     
     <!-- Success/Error Messages -->
     <% if (typeof query !== 'undefined' && query) { %>
@@ -181,6 +287,34 @@
     </div>
 
   </div>
+
+  <script>
+    // Mobile menu toggle functionality
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+        
+        // Toggle hamburger icon
+        const icon = mobileMenuButton.querySelector('i');
+        if (mobileMenu.classList.contains('hidden')) {
+          icon.className = 'fas fa-bars text-xl';
+        } else {
+          icon.className = 'fas fa-times text-xl';
+        }
+      });
+      
+      // Close mobile menu when clicking on links
+      mobileMenu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+          mobileMenuButton.querySelector('i').className = 'fas fa-bars text-xl';
+        }
+      });
+    }
+  </script>
 
 </body>
 </html>

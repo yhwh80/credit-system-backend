@@ -13,7 +13,7 @@ services:
   - key: NODE_ENV
     value: production
   - key: MONGO_URI
-    value: mongodb+srv://sgpyhwh1980:TgspjefY2DZAO7l5@credit-system-prod.ahbdosi.mongodb.net/?retryWrites=true&w=majority&appName=credit-system-prod
+    value: mongodb+srv://appuser:429k5g7CQ16B8uOR@credit-system-db-0ec28f8c.mongo.ondigitalocean.com/admin?authSource=admin&replicaSet=credit-system-db&tls=true
     type: SECRET
   - key: SESSION_SECRET
     value: 8ec046098e7b84e00f5eb1cbd0afd62697f0dc385f3ba2e4a91a4c4d0de406db
