@@ -13,6 +13,11 @@ dotenv.config(); // Load .env config
 const app = express();
 app.set('view engine', 'ejs');
 
+// ✅ Trust proxy for DigitalOcean App Platform
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // 🔐 Security Headers (production-ready)
 app.use(helmet({
   contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
