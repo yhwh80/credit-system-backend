@@ -22,6 +22,8 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com"],
       fontSrc: ["'self'", "https://cdnjs.cloudflare.com"],
       imgSrc: ["'self'", "data:", "https:"],
+      formAction: ["'self'"],
+      // Removed upgrade-insecure-requests to fix login issues
     },
   } : false, // Disable CSP in development
   hsts: process.env.NODE_ENV === 'production', // Enable HTTPS enforcement in production
