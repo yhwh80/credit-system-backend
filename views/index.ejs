@@ -28,6 +28,56 @@
         }
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Theme transition for smooth switching */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Dark theme styles */
+        .dark {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .dark .bg-white { background-color: #1e293b !important; }
+        .dark .bg-gray-50 { background-color: #334155 !important; }
+        .dark .bg-gray-900 { background-color: #020617 !important; }
+        .dark .text-gray-600 { color: #94a3b8 !important; }
+        .dark .text-gray-700 { color: #cbd5e1 !important; }
+        .dark .text-gray-900 { color: #f1f5f9 !important; }
+        .dark .text-gray-300 { color: #cbd5e1 !important; }
+        .dark .border-gray-200 { border-color: #475569 !important; }
+        .dark .border-gray-800 { border-color: #334155 !important; }
+        .dark .hover\:bg-gray-50:hover { background-color: #475569 !important; }
+        .dark .hover\:text-gray-900:hover { color: #f1f5f9 !important; }
+        .dark .hover\:border-gray-400:hover { border-color: #64748b !important; }
+
+        /* Navigation specific dark styles */
+        .dark .nav-link { color: #cbd5e1 !important; }
+        .dark .nav-link:hover { color: #f1f5f9 !important; }
+
+        /* Hero section dark theme */
+        .dark .bg-gradient-to-br.from-blue-50 {
+            background: linear-gradient(to bottom right, #1e293b, #334155, #475569) !important;
+        }
+
+        /* Mobile menu dark theme */
+        .dark #mobile-menu {
+            background-color: rgba(30, 41, 59, 0.95) !important;
+            border-color: #475569 !important;
+        }
+
+        /* Theme toggle styles */
+        .theme-toggle-dark {
+            background-color: #4f46e5 !important;
+        }
+
+        .theme-toggle-dark .theme-toggle-dot {
+            transform: translateX(1.25rem) !important;
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900">
     <!-- Navigation -->
@@ -46,17 +96,32 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
-                    <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
-                    <a href="/auth/login" class="text-gray-600 hover:text-gray-900 transition-colors">Login</a>
+                    <a href="#features" class="nav-link text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+                    <a href="#how-it-works" class="nav-link text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
+                    <a href="#pricing" class="nav-link text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+                    <a href="/auth/login" class="nav-link text-gray-600 hover:text-gray-900 transition-colors">Login</a>
                     <a href="/auth/register" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105">
                         Get Started
                     </a>
+
+                    <!-- Theme Toggle -->
+                    <div class="flex items-center ml-4">
+                        <button id="theme-toggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-label="Toggle theme">
+                            <span id="theme-toggle-dot" class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 translate-x-1"></span>
+                        </button>
+                        <span class="ml-2 text-sm text-gray-600">
+                            <i id="theme-icon" class="fas fa-sun"></i>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="md:hidden">
+                <!-- Mobile menu and theme toggle -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <!-- Mobile Theme Toggle -->
+                    <button id="mobile-theme-toggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-gray-300 transition-colors duration-200 focus:outline-none" aria-label="Toggle theme">
+                        <span id="mobile-theme-toggle-dot" class="inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 translate-x-1"></span>
+                    </button>
+
                     <button id="mobile-menu-button" class="text-gray-600 hover:text-gray-900 transition-colors">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -350,13 +415,86 @@
     </footer>
 
     <script>
+        // Theme toggle functionality
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.body.classList.add('dark');
+                updateThemeToggle(true);
+            } else {
+                document.body.classList.remove('dark');
+                updateThemeToggle(false);
+            }
+        }
+
+        function updateThemeToggle(isDark) {
+            const toggles = ['theme-toggle', 'mobile-theme-toggle'];
+            const dots = ['theme-toggle-dot', 'mobile-theme-toggle-dot'];
+            const icon = document.getElementById('theme-icon');
+
+            toggles.forEach(toggleId => {
+                const toggle = document.getElementById(toggleId);
+                if (toggle) {
+                    if (isDark) {
+                        toggle.classList.add('theme-toggle-dark');
+                    } else {
+                        toggle.classList.remove('theme-toggle-dark');
+                    }
+                }
+            });
+
+            dots.forEach(dotId => {
+                const dot = document.getElementById(dotId);
+                if (dot) {
+                    dot.classList.toggle('theme-toggle-dot', isDark);
+                }
+            });
+
+            if (icon) {
+                icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.body.classList.contains('dark');
+
+            if (isDark) {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                updateThemeToggle(false);
+            } else {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                updateThemeToggle(true);
+            }
+        }
+
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initTheme();
+
+            // Add event listeners to theme toggles
+            const themeToggle = document.getElementById('theme-toggle');
+            const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+
+            if (mobileThemeToggle) {
+                mobileThemeToggle.addEventListener('click', toggleTheme);
+            }
+        });
+
         // Mobile menu toggle functionality
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        
+
         mobileMenuButton.addEventListener('click', function() {
             mobileMenu.classList.toggle('hidden');
-            
+
             // Toggle hamburger icon
             const icon = mobileMenuButton.querySelector('i');
             if (mobileMenu.classList.contains('hidden')) {
@@ -365,7 +503,7 @@
                 icon.className = 'fas fa-times text-xl';
             }
         });
-        
+
         // Close mobile menu when clicking on links
         mobileMenu.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
